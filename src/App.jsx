@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-const API_URL = "https://glayzamagnase-lavalust-1.onrender.com/api";
+const API_URL =
+  "https://glayzamagnase-lavalust-1.onrender.com/api";
 
 function App() {
   const [token, setToken] = useState(
@@ -24,10 +25,9 @@ function App() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-
-  // =========================================
+  // =========================================================
   // LOGIN
-  // =========================================
+  // =========================================================
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -50,7 +50,8 @@ function App() {
 
       const data = await response.json();
 
-      if (!response.ok || !data.status) {
+      // Login API uses "success"
+      if (!response.ok || !data.success) {
         throw new Error(
           data.message || "Invalid username or password."
         );
@@ -71,18 +72,15 @@ function App() {
     }
   };
 
-
-  // =========================================
-  // FETCH PRODUCTS
-  // =========================================
+  // =========================================================
+  // GET PRODUCTS
+  // =========================================================
 
   const fetchProducts = async () => {
     const savedToken =
       localStorage.getItem("lab6_token");
 
-    if (!savedToken) {
-      return;
-    }
+    if (!savedToken) return;
 
     setLoading(true);
     setError("");
@@ -110,6 +108,7 @@ function App() {
         );
       }
 
+      // Product API uses "status"
       if (!response.ok || !data.status) {
         throw new Error(
           data.message || "Failed to load products."
@@ -126,10 +125,9 @@ function App() {
     }
   };
 
-
-  // =========================================
-  // LOAD PRODUCTS
-  // =========================================
+  // =========================================================
+  // LOAD PRODUCTS AFTER LOGIN
+  // =========================================================
 
   useEffect(() => {
     if (token) {
@@ -137,10 +135,9 @@ function App() {
     }
   }, [token]);
 
-
-  // =========================================
+  // =========================================================
   // RESET FORM
-  // =========================================
+  // =========================================================
 
   const resetForm = () => {
     setProductName("");
@@ -150,10 +147,9 @@ function App() {
     setEditingId(null);
   };
 
-
-  // =========================================
+  // =========================================================
   // ADD / UPDATE PRODUCT
-  // =========================================
+  // =========================================================
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -189,9 +185,7 @@ function App() {
         ? `${API_URL}/products/${editingId}`
         : `${API_URL}/products`;
 
-      const method = editingId
-        ? "PUT"
-        : "POST";
+      const method = editingId ? "PUT" : "POST";
 
       const response = await fetch(url, {
         method,
@@ -214,6 +208,7 @@ function App() {
         );
       }
 
+      // Product CRUD uses "status"
       if (!response.ok || !data.status) {
         throw new Error(
           data.message || "Unable to save product."
@@ -238,10 +233,9 @@ function App() {
     }
   };
 
-
-  // =========================================
+  // =========================================================
   // EDIT PRODUCT
-  // =========================================
+  // =========================================================
 
   const handleEdit = (product) => {
     setEditingId(product.id);
@@ -254,13 +248,8 @@ function App() {
       product.description || ""
     );
 
-    setPrice(
-      product.price || ""
-    );
-
-    setQuantity(
-      product.quantity || ""
-    );
+    setPrice(product.price || "");
+    setQuantity(product.quantity || "");
 
     setMessage("");
     setError("");
@@ -271,19 +260,16 @@ function App() {
     });
   };
 
-
-  // =========================================
+  // =========================================================
   // DELETE PRODUCT
-  // =========================================
+  // =========================================================
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this product?"
     );
 
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
 
     setLoading(true);
     setError("");
@@ -315,6 +301,7 @@ function App() {
         );
       }
 
+      // Product CRUD uses "status"
       if (!response.ok || !data.status) {
         throw new Error(
           data.message || "Unable to delete product."
@@ -335,10 +322,9 @@ function App() {
     }
   };
 
-
-  // =========================================
+  // =========================================================
   // LOGOUT
-  // =========================================
+  // =========================================================
 
   const handleLogout = async () => {
     const savedToken =
@@ -355,9 +341,7 @@ function App() {
         });
       }
     } catch (err) {
-      console.log(
-        "Logout request failed."
-      );
+      console.log("Logout request failed.");
     }
 
     localStorage.removeItem("lab6_token");
@@ -371,19 +355,16 @@ function App() {
     setError("");
   };
 
-
-  // =========================================
+  // =========================================================
   // LOGIN PAGE
-  // =========================================
+  // =========================================================
 
   if (!token) {
     return (
       <div className="login-page">
-
         <div className="login-container">
 
-          {/* BRAND SIDE */}
-
+          {/* LEFT BRAND PANEL */}
           <div className="login-brand">
 
             <div className="brand-decoration decoration-one">
@@ -391,7 +372,7 @@ function App() {
             </div>
 
             <div className="brand-decoration decoration-two">
-              ✧
+              ☕
             </div>
 
             <div className="login-coffee">
@@ -399,7 +380,7 @@ function App() {
             </div>
 
             <span className="brand-small">
-              WELCOME TO
+              COFFEE SHOP
             </span>
 
             <h1>
@@ -409,48 +390,35 @@ function App() {
             </h1>
 
             <p>
-              A little warmth.
-              <br />
-              A little comfort.
-              <br />
-              Every single day.
+              A simple and cozy product
+              management system for your
+              coffee shop.
             </p>
 
             <div className="coffee-line">
-
               <span></span>
-
-              <i>
-                ✦
-              </i>
-
+              <i>✦</i>
               <span></span>
-
             </div>
-
           </div>
 
-
-          {/* LOGIN SIDE */}
-
+          {/* RIGHT LOGIN PANEL */}
           <div className="login-form-panel">
 
             <div className="login-heading">
-
               <span className="login-welcome">
                 Welcome back
               </span>
 
               <h2>
-                Let's get started.
+                Sign in
               </h2>
 
               <p>
-                Sign in to manage your coffee shop.
+                Enter your account details
+                to continue.
               </p>
-
             </div>
-
 
             {error && (
               <div className="error-message">
@@ -458,19 +426,14 @@ function App() {
               </div>
             )}
 
-
             <form onSubmit={handleLogin}>
 
-              {/* USERNAME */}
-
               <div className="form-group">
-
                 <label>
                   Username
                 </label>
 
                 <div className="input-wrapper">
-
                   <span className="input-icon">
                     ♙
                   </span>
@@ -483,27 +446,20 @@ function App() {
                         e.target.value
                       )
                     }
-                    placeholder="Enter your username"
+                    placeholder="Enter username"
                     required
                   />
-
                 </div>
-
               </div>
 
-
-              {/* PASSWORD */}
-
               <div className="form-group">
-
                 <label>
                   Password
                 </label>
 
                 <div className="input-wrapper">
-
                   <span className="input-icon">
-                    ◈
+                    🔒
                   </span>
 
                   <input
@@ -514,68 +470,49 @@ function App() {
                         e.target.value
                       )
                     }
-                    placeholder="Enter your password"
+                    placeholder="Enter password"
                     required
                   />
-
                 </div>
-
               </div>
-
-
-              {/* LOGIN BUTTON */}
 
               <button
                 type="submit"
                 className="login-submit"
                 disabled={loading}
               >
-
                 <span>
                   {loading
-                    ? "Signing in..."
-                    : "Sign in"}
+                    ? "Logging in..."
+                    : "Sign in to dashboard"}
                 </span>
 
-                {!loading && (
-                  <span className="button-arrow">
-                    →
-                  </span>
-                )}
-
+                <span className="button-arrow">
+                  →
+                </span>
               </button>
-
             </form>
 
-
             <div className="login-footer">
-              <span>
-                ☕
-              </span>
-
-              Crafted for coffee lovers
+              <span>☕</span>
+              Coffee Shop Product Management
             </div>
-
           </div>
 
         </div>
-
       </div>
     );
   }
 
-
-  // =========================================
+  // =========================================================
   // DASHBOARD
-  // =========================================
+  // =========================================================
 
   return (
     <div className="app">
 
-      {/* HEADER */}
-
+      {/* TOPBAR */}
       <header className="topbar">
-
         <div className="topbar-inner">
 
           <div className="brand">
@@ -585,7 +522,6 @@ function App() {
             </span>
 
             <div>
-
               <h2>
                 In Every Dose of Coffee
               </h2>
@@ -593,11 +529,9 @@ function App() {
               <p>
                 Product Management System
               </p>
-
             </div>
 
           </div>
-
 
           <button
             className="logout-button"
@@ -607,46 +541,42 @@ function App() {
           </button>
 
         </div>
-
       </header>
-
-
-      {/* MAIN */}
 
       <main className="main-wrapper">
 
         <div className="container">
 
-          {/* DASHBOARD WELCOME */}
-
+          {/* WELCOME BANNER */}
           <section className="dashboard-welcome">
 
             <div className="welcome-content">
 
               <span className="welcome-label">
-                ☕ YOUR COFFEE SPACE
+                COFFEE SHOP MANAGEMENT
               </span>
 
               <h1>
-                Good coffee starts here.
+                Manage Your
+                <br />
+                Products
               </h1>
 
               <p>
-                Keep your menu fresh, organized,
-                and ready for every customer.
+                Keep your coffee products
+                organized and manage your
+                inventory with ease.
               </p>
 
             </div>
 
-
             <div className="product-stat">
 
-              <span className="stat-icon">
+              <div className="stat-icon">
                 ☕
-              </span>
+              </div>
 
               <div>
-
                 <strong>
                   {products.length}
                 </strong>
@@ -654,40 +584,55 @@ function App() {
                 <span>
                   Products
                 </span>
-
               </div>
 
             </div>
 
           </section>
 
-
           {/* MESSAGES */}
-
           {message && (
-            <div className="success-message">
+            <div
+              className="success-message"
+              style={{
+                marginTop: "28px",
+                marginBottom: "0",
+              }}
+            >
               {message}
             </div>
           )}
 
           {error && (
-            <div className="error-message">
+            <div
+              className="error-message"
+              style={{
+                marginTop: "28px",
+                marginBottom: "0",
+              }}
+            >
               {error}
             </div>
           )}
 
-
           {/* ADD / EDIT PRODUCT */}
-
           <section className="form-card">
 
             <div className="section-title">
 
-              <h2>
-                {editingId
-                  ? "Edit Product"
-                  : "Add New Product"}
-              </h2>
+              <div>
+                <h2>
+                  {editingId
+                    ? "Edit Product"
+                    : "Add New Product"}
+                </h2>
+
+                <p className="product-list-subtitle">
+                  {editingId
+                    ? "Update the product information below."
+                    : "Add a new coffee product to your inventory."}
+                </p>
+              </div>
 
               {editingId && (
                 <button
@@ -701,13 +646,10 @@ function App() {
 
             </div>
 
-
             <form
               onSubmit={handleSubmit}
               className="product-form"
             >
-
-              {/* PRODUCT NAME */}
 
               <div className="form-group">
 
@@ -729,9 +671,6 @@ function App() {
 
               </div>
 
-
-              {/* DESCRIPTION */}
-
               <div className="form-group">
 
                 <label>
@@ -749,9 +688,6 @@ function App() {
                 />
 
               </div>
-
-
-              {/* PRICE + QUANTITY */}
 
               <div className="form-row">
 
@@ -777,7 +713,6 @@ function App() {
 
                 </div>
 
-
                 <div className="form-group">
 
                   <label>
@@ -801,9 +736,6 @@ function App() {
 
               </div>
 
-
-              {/* SUBMIT */}
-
               <button
                 type="submit"
                 className="primary-button"
@@ -820,15 +752,12 @@ function App() {
 
           </section>
 
-
           {/* PRODUCT LIST */}
-
           <section className="products-card">
 
             <div className="section-title">
 
               <div>
-
                 <h2>
                   Product List
                 </h2>
@@ -836,9 +765,7 @@ function App() {
                 <p className="product-list-subtitle">
                   Manage all coffee products
                 </p>
-
               </div>
-
 
               <button
                 className="refresh-button"
@@ -852,10 +779,7 @@ function App() {
 
             </div>
 
-
             {products.length === 0 ? (
-
-              /* EMPTY */
 
               <div className="empty-state">
 
@@ -868,58 +792,34 @@ function App() {
                 </h3>
 
                 <p>
-                  Add your first coffee product
-                  using the form above.
+                  Add your first coffee
+                  product using the form
+                  above.
                 </p>
 
               </div>
 
             ) : (
 
-              /* TABLE */
-
               <div className="table-wrapper">
 
                 <table>
 
                   <thead>
-
                     <tr>
-
-                      <th>
-                        ID
-                      </th>
-
-                      <th>
-                        Product
-                      </th>
-
-                      <th>
-                        Description
-                      </th>
-
-                      <th>
-                        Price
-                      </th>
-
-                      <th>
-                        Quantity
-                      </th>
-
-                      <th>
-                        Actions
-                      </th>
-
+                      <th>ID</th>
+                      <th>Product</th>
+                      <th>Description</th>
+                      <th>Price</th>
+                      <th>Quantity</th>
+                      <th>Actions</th>
                     </tr>
-
                   </thead>
-
 
                   <tbody>
 
                     {products.map(
                       (product) => (
-
                         <tr
                           key={product.id}
                         >
@@ -928,48 +828,33 @@ function App() {
                             {product.id}
                           </td>
 
-
                           <td>
-
                             <strong>
                               {
                                 product.product_name
                               }
                             </strong>
-
                           </td>
 
-
                           <td>
-
-                            {
-                              product.description ||
-                              "No description"
-                            }
-
+                            {product.description ||
+                              "No description"}
                           </td>
 
-
                           <td>
-
                             ₱
                             {Number(
                               product.price
                             ).toFixed(2)}
-
                           </td>
 
-
                           <td>
-
                             <span className="stock">
                               {
                                 product.quantity
                               }
                             </span>
-
                           </td>
-
 
                           <td>
 
@@ -985,7 +870,6 @@ function App() {
                               >
                                 Edit
                               </button>
-
 
                               <button
                                 className="delete-button"
@@ -1003,7 +887,6 @@ function App() {
                           </td>
 
                         </tr>
-
                       )
                     )}
 
@@ -1016,9 +899,6 @@ function App() {
             )}
 
           </section>
-
-
-          {/* FOOTER */}
 
           <footer>
             In Every Dose of Coffee • React • LavaLust API • Aiven MySQL
